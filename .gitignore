@@ -1,0 +1,5 @@
+market_data.db
+sessions.db
+data/
+logs/
+__pycache__/

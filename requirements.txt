@@ -5,3 +5,4 @@ matplotlib==3.4.3
 telebot==4.5.1
 pulp==2.6.0
 jdatetime==3.6.6
+openpyxl

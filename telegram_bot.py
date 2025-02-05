@@ -52,61 +52,76 @@ RATE_LIMIT_SECONDS = 0.5
 MESSAGES = {
     'en': {
         'welcome_intro': 
-            "Hello! Welcome to the *Crypto & Gold DCA Bot*.\n\n"
-            "Here is what this bot does:\n"
-            "1. You choose a crypto pair (like `BTCUSDT`, `ETHUSDT`, `SOLUSDT`) from Binance.\n"
-            "2. The bot downloads historical 4h price data for that pair.\n"
-            "3. The bot also downloads daily Gold price data (converted to USD).\n"
-            "4. We run *two strategies* on your chosen crypto and on gold:\n"
-            "   - Blind DCA (with two different frequencies)\n"
-            "   - An *optimized* DCA (using mathematical programming)\n"
-            "5. We show final results, profit, charts, and detailed Excel files for each scenario.\n\n"
-            "Let's start by choosing your language!\n",
-        'choose_language': "Please choose your language:",
-        'language_set': "Language set to English.",
-        'ask_crypto_pair': "Enter the *Binance pair* you want (e.g. `BTCUSDT`, `ETHUSDT`):",
-        'ask_total_investment': "Enter your *Total Investment Budget* (e.g., 10000):",
-        'ask_start_date': "Enter the *Backtest Start Date* in `YYYY-MM-DD` format (e.g., 2021-01-01):",
-        'ask_end_date': "Enter the *Backtest End Date* in `YYYY-MM-DD` format (e.g., 2025-02-01):",
-        'ask_monthly_limit': "Enter the *Maximum Monthly Investment* (e.g., 1000):",
-        'ask_weekly_limit': "Enter the *Maximum Weekly Investment* (e.g., 250):",
-        'ask_min_invest': "Enter the *Minimum Investment per Buy* (e.g., 50):",
-        'ask_max_invest': "Enter the *Maximum Investment per Buy* (e.g., 250):",
-        'ask_blind_freq1': "Enter Blind DCA frequency (days) for Strategy 1:",
-        'ask_blind_freq2': "Enter Blind DCA frequency (days) for Strategy 2:",
-        'processing': "All inputs received. Please wait while we do everything... ⏳",
-        'pipeline_complete': "✅ *Pipeline complete!* Comparison for Crypto & Gold is ready.",
-        'error': "An error occurred: *{error}*",
-        'help': "Available commands:\n/start - Restart\n/help - Show help",
+            "👋 *Hello!* Welcome to the **Crypto & Gold DCA Bot**. We're here to help you make smart, data-driven investment decisions.\n\n"
+            "Here's what this bot does for you:\n"
+            "1️⃣ *Choose a crypto pair* (e.g., `BTCUSDT`, `ETHUSDT`, `SOLUSDT`) from Binance.\n"
+            "2️⃣ The bot fetches *4-hour interval price data* from Binance for the pair you've selected.\n"
+            "3️⃣ We also download historical *gold prices* in Iran, including:\n"
+            "    - The price of **1 gram of gold** in Iranian *Tomans*.\n"
+            "    - The **historical Dollar (USD)** price in the Iranian market.\n"
+            "    - We automatically convert the price of gold to **USD** to provide an accurate international comparison.\n"
+            "4️⃣ We simulate *two powerful DCA strategies* for both crypto and gold:\n"
+            "    - A **Blind DCA Strategy** (two custom frequencies).\n"
+            "    - An **Optimized DCA Strategy** (using advanced mathematical models).\n"
+            "5️⃣ The bot generates **detailed reports**, including:\n"
+            "    - 📊 *Charts* showing your strategy's performance.\n"
+            "    - 💼 *Profit summaries* and **portfolio value** analysis.\n"
+            "    - 📄 *Excel files* for each scenario.\n\n"
+            "🌐 *Ready to start?* Let's begin by choosing your language!",
+        
+        'choose_language': "🌍 Please choose your language:",
+        'language_set': "✅ Language set to English.",
+        'ask_crypto_pair': "🔹 Enter the *Binance pair* you want to analyze (e.g., `BTCUSDT`, `ETHUSDT`):",
+        'ask_total_investment': "🔹 Enter your *Total Investment Budget* (e.g., `10000` USDT):",
+        'ask_start_date': "🔹 Enter the *Backtest Start Date* in `YYYY-MM-DD` format (e.g., `2021-01-01`):",
+        'ask_end_date': "🔹 Enter the *Backtest End Date* in `YYYY-MM-DD` format (e.g., `2025-02-01`):",
+        'ask_monthly_limit': "🔹 Enter the *Maximum Monthly Investment* (e.g., `1000` USDT):",
+        'ask_weekly_limit': "🔹 Enter the *Maximum Weekly Investment* (e.g., `250` USDT):",
+        'ask_min_invest': "🔹 Enter the *Minimum Investment per Buy* (e.g., `50` USDT):",
+        'ask_max_invest': "🔹 Enter the *Maximum Investment per Buy* (e.g., `250` USDT):",
+        'ask_blind_freq1': "🔹 Enter the *Blind DCA frequency (days)* for Strategy 1:",
+        'ask_blind_freq2': "🔹 Enter the *Blind DCA frequency (days)* for Strategy 2:",
+        'processing': "⏳ All inputs received! We are processing your request. This may take a few moments...",
+        'pipeline_complete': "✅ *Pipeline complete!* Your **Crypto & Gold comparison** is ready.",
+        'error': "⚠️ An error occurred: *{error}*",
+        'help': "💡 *Available commands:*\n/start - Restart\n/help - Show help",
     },
+
     'fa': {
         'welcome_intro': 
-            "سلام! به *ربات سرمایه‌گذاری کریپتو و طلا* خوش آمدید.\n\n"
-            "این ربات چه می‌کند:\n"
-            "1. یک جفت رمزارز در بایننس انتخاب می‌کنید (مثلاً `BTCUSDT`, `ETHUSDT`).\n"
-            "2. ربات داده‌های تاریخی 4 ساعته این جفت را دانلود می‌کند.\n"
-            "3. همچنین داده‌های روزانه قیمت طلا (به دلار) را دریافت می‌کند.\n"
-            "4. سپس دو استراتژی را برای کریپتو و طلا اجرا می‌کند:\n"
-            "   - DCA کور با دو فاصله زمانی\n"
-            "   - DCA بهینه‌شده (استفاده از برنامه‌ریزی ریاضی)\n"
-            "5. در نهایت نتایج، سود، نمودار و فایل اکسل هر سناریو را تقدیم می‌کند.\n\n"
-            "بیایید زبان موردنظرتان را انتخاب کنیم!\n",
-        'choose_language': "لطفاً زبان خود را انتخاب کنید:",
-        'language_set': "زبان به فارسی تنظیم شد.",
-        'ask_crypto_pair': "جفت ارز بایننس موردنظر را وارد کنید (مثلاً `BTCUSDT`, `ETHUSDT`):",
-        'ask_total_investment': "بودجه کل سرمایه‌گذاری را وارد کنید (مثال: 10000):",
-        'ask_start_date': "تاریخ شروع را با فرمت `YYYY-MM-DD` وارد کنید (مثال: 2021-01-01):",
-        'ask_end_date': "تاریخ پایان را با فرمت `YYYY-MM-DD` وارد کنید (مثال: 2025-02-01):",
-        'ask_monthly_limit': "حداکثر سرمایه‌گذاری ماهانه (مثال: 1000):",
-        'ask_weekly_limit': "حداکثر سرمایه‌گذاری هفتگی (مثال: 250):",
-        'ask_min_invest': "حداقل سرمایه‌گذاری هر خرید (مثال: 50):",
-        'ask_max_invest': "حداکثر سرمایه‌گذاری هر خرید (مثال: 250):",
-        'ask_blind_freq1': "فاصله استراتژی اول DCA کور (روز):",
-        'ask_blind_freq2': "فاصله استراتژی دوم DCA کور (روز):",
-        'processing': "همه ورودی‌ها دریافت شد. لطفاً صبر کنید... ⏳",
-        'pipeline_complete': "✅ *فرآیند کامل شد!* مقایسه طلا و کریپتو آماده است.",
-        'error': "خطایی رخ داد: *{error}*",
-        'help': "دستورات:\n/start - شروع مجدد\n/help - راهنما",
+            "👋 *سلام!* به **ربات سرمایه‌گذاری کریپتو و طلا** خوش آمدید. ما به شما کمک می‌کنیم که تصمیمات هوشمندانه و مبتنی بر داده در سرمایه‌گذاری بگیرید.\n\n"
+            "در اینجا خلاصه‌ای از عملکرد این ربات را می‌بینید:\n"
+            "1️⃣ *یک جفت ارز دیجیتال* در بایننس انتخاب کنید (مثلاً `BTCUSDT`، `ETHUSDT`).\n"
+            "2️⃣ ربات *داده‌های قیمتی ۴ ساعته* این جفت ارز را از بایننس دانلود می‌کند.\n"
+            "3️⃣ همچنین داده‌های تاریخی *قیمت طلا* در ایران دریافت می‌شود، شامل:\n"
+            "    - **قیمت یک گرم طلا** به تومان.\n"
+            "    - **قیمت دلار (USD)** در بازار ایران.\n"
+            "    - ما به طور خودکار قیمت طلا را به **دلار** تبدیل می‌کنیم تا مقایسه بین‌المللی دقیقی ارائه شود.\n"
+            "4️⃣ ما *دو استراتژی قدرتمند DCA* را برای کریپتو و طلا شبیه‌سازی می‌کنیم:\n"
+            "    - **استراتژی کور DCA** (با دو فاصله زمانی دلخواه).\n"
+            "    - **استراتژی بهینه DCA** (با استفاده از مدل‌های ریاضی پیشرفته).\n"
+            "5️⃣ این ربات **گزارش‌های جامع** تولید می‌کند، شامل:\n"
+            "    - 📊 *نمودارهایی* که عملکرد استراتژی شما را نشان می‌دهند.\n"
+            "    - 💼 *خلاصه سود و ارزش سبد سرمایه‌گذاری*.\n"
+            "    - 📄 *فایل‌های اکسل* برای هر سناریو.\n\n"
+            "🌐 *آماده‌ای؟* بیایید زبان موردنظر خود را انتخاب کنیم. لطفا تمامی اعداد را به انگلیسی وارد کنید!",
+        
+        'choose_language': "🌍 لطفاً زبان خود را انتخاب کنید:",
+        'language_set': "✅ زبان به فارسی تنظیم شد.",
+        'ask_crypto_pair': "🔹 جفت ارز بایننس موردنظر خود را وارد کنید (مثلاً `BTCUSDT`, `ETHUSDT`):",
+        'ask_total_investment': "🔹 *بودجه کل سرمایه‌گذاری* خود را وارد کنید (مثلاً `10000` USDT):",
+        'ask_start_date': "🔹 *تاریخ شروع تحلیل* را با فرمت `YYYY-MM-DD` وارد کنید (مثلاً `01-01-2024`):",
+        'ask_end_date': "🔹 *تاریخ پایان تحلیل* را با فرمت `YYYY-MM-DD` وارد کنید (مثلاً `01-02-2025`):",
+        'ask_monthly_limit': "🔹 *حداکثر سرمایه‌گذاری ماهانه* را وارد کنید (مثلاً `1000` USDT):",
+        'ask_weekly_limit': "🔹 *حداکثر سرمایه‌گذاری هفتگی* را وارد کنید (مثلاً `250` USDT):",
+        'ask_min_invest': "🔹 *حداقل سرمایه‌گذاری در هر خرید* را وارد کنید (مثلاً `50` USDT):",
+        'ask_max_invest': "🔹 *حداکثر سرمایه‌گذاری در هر خرید* را وارد کنید (مثلاً `250` USDT):",
+        'ask_blind_freq1': "🔹 فاصله زمانی (روز) برای *استراتژی کور DCA اول* را وارد کنید:",
+        'ask_blind_freq2': "🔹 فاصله زمانی (روز) برای *استراتژی کور DCA دوم* را وارد کنید:",
+        'processing': "⏳ همه ورودی‌ها دریافت شد! در حال پردازش درخواست شما هستیم. این کار ممکن است چند لحظه طول بکشد...",
+        'pipeline_complete': "✅ *فرآیند کامل شد!* **مقایسه طلا و کریپتو** شما آماده است.",
+        'error': "⚠️ خطایی رخ داد: *{error}*",
+        'help': "💡 *دستورات موجود:*\n/start - شروع مجدد\n/help - راهنما",
     }
 }
 

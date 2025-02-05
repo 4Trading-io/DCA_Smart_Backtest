@@ -46,3 +46,7 @@ This project consists of several Python modules, each responsible for a specific
 ```bash
 git clone git@github.com:4Trading-io/DCA_Smart_Backtest.git
 cd DCA_Smart_Backtest
+pip install -r requirements.txt
+
+
+---

@@ -4,5 +4,5 @@ data/
 logs/
 __pycache__/
 credentials.py
-
+credentials
 

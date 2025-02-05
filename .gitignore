@@ -3,3 +3,4 @@ sessions.db
 data/
 logs/
 __pycache__/
+credentials

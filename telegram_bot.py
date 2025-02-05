@@ -67,7 +67,7 @@ MESSAGES = {
             "    - 📊 *Charts* showing your strategy's performance.\n"
             "    - 💼 *Profit summaries* and **portfolio value** analysis.\n"
             "    - 📄 *Excel files* for each scenario.\n\n"
-            "🌐 *Ready to start?* Let's begin by choosing your language!",
+            "🌐 *Ready to start?* Let's begin by choosing your language!\n\n",
         
         'choose_language': "🌍 Please choose your language:",
         'language_set': "✅ Language set to English.",

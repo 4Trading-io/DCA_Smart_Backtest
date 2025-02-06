@@ -6,7 +6,23 @@ MESSAGES = {
         'welcome_intro': (
             "👋 **Welcome to the Crypto & Gold DCA Analysis Bot!**\n\n"
             "🌟 *Discover the magic of Dollar-Cost Averaging (DCA)!*\n\n"
-            "This bot will show you why Dollar-Cost Averaging is a safe and effective investment strategy.\n"
+            "**What is DCA?**\n"
+            "Dollar-Cost Averaging is an investment strategy where you invest a fixed amount of money "
+            "on a regular schedule, regardless of the asset's price. By purchasing smaller amounts over time, "
+            "you reduce the impact of short-term market volatility and avoid trying to 'time the market.'\n\n"
+            "**What does this bot do?**\n"
+            "1. **Historical Data Fetch**: We automatically gather historical price data for:\n"
+            "   • Your chosen *cryptocurrency* pair (e.g. BTCUSDT, ETHUSDT) from Binance.\n"
+            "   • *Gold in Iran* by fetching 1-gram gold price in Rials from Navasan.\n"
+            "   • *USD to Rial* data from Navasan.\n"
+            "2. **Gold Price in USD**: To compare gold and crypto fairly, we convert gold prices from Rials "
+            "into USD. This ensures you're seeing a realistic 'gold in dollars' price, matching how crypto is "
+            "priced in USDT.\n"
+            "3. **DCA & Optimization**: The bot simulates:\n"
+            "   • Blind DCA strategies (buying periodically).\n"
+            "   • An optimized buying strategy using ILP (to maximize performance under your constraints).\n"
+            "4. **Compare & Report**: We generate final summaries, charts, and Excel files so you can see "
+            "which approach yields the best results over your chosen historical period.\n\n"
             "Let's begin by selecting your language."
         ),
         'choose_language': "🌍 **Please select your language:**",
@@ -130,9 +146,24 @@ MESSAGES = {
         'welcome_intro': (
             "👋 **به ربات تحلیل DCA کریپتو و طلا خوش آمدید!**\n\n"
             "🌟 *جادوی میانگین‌گیری هزینه (DCA) را کشف کنید!*\n\n"
-            "این ربات به شما نشان می‌دهد که چرا DCA یک استراتژی سرمایه‌گذاری امن و موثر است.\n"
-            "بیایید با انتخاب زبان شروع کنید."
-            "لطفا تمامی اعداد را به انگلیسی وارد کنید"
+            "**DCA چیست؟**\n"
+            "روش میانگین‌گیری هزینه (Dollar-Cost Averaging) استراتژی‌ای است که در آن شما در فواصل زمانی منظم "
+            "و با مبالغ ثابت سرمایه‌گذاری می‌کنید، بدون توجه به نوسانات کوتاه‌مدت قیمت بازار. "
+            "با خرید مقادیر کم در طول زمان، تأثیر نوسانات شدید قیمت را کاهش داده و سعی در 'زمان‌بندی بازار' نمی‌کنید.\n\n"
+            "**این ربات چه کار می‌کند؟**\n"
+            "۱. **گردآوری داده‌های تاریخی**: ما قیمت‌های تاریخی را جمع‌آوری می‌کنیم برای:\n"
+            "   • جفت ارز کریپتوی انتخابی شما (مثلاً BTCUSDT, ETHUSDT) از صرافی بایننس.\n"
+            "   • قیمت طلای یک‌گرمی در ایران (به تومان) از نوآسان.\n"
+            "   • قیمت دلار به تومان از نوآسان.\n"
+            "۲. **تبدیل قیمت طلا به دلار**: برای مقایسه‌ی منصفانه‌ی طلا و کریپتو، قیمت طلا (به تومان) را "
+            "با استفاده از نرخ دلار به تومان به دلار تبدیل می‌کنیم. به این ترتیب، "
+            "طلا نیز در واحد دلاری (مشابه کریپتو در USDT) سنجیده می‌شود.\n"
+            "۳. **شبیه‌سازی DCA و بهینه‌سازی**:\n"
+            "   • پیاده‌سازی استراتژی کورِ DCA (خرید دوره‌ای ثابت).\n"
+            "   • اجرای مدل ILP برای یافتن استراتژی بهینه‌ی خرید در بازه‌ی زمانی موردنظر.\n"
+            "۴. **مقایسه و گزارش**: در پایان گزارش‌ها، نمودارها و فایل‌های اکسل تولید می‌شود تا ببینید "
+            "کدام روش در دوره‌ی تاریخی انتخابی شما نتیجه‌ی بهتری داشته است.\n\n"
+            "بیایید با انتخاب زبان شروع کنیم."
         ),
         'choose_language': "🌍 **لطفاً زبان خود را انتخاب کنید:**",
         'language_set_en': "✅ *زبان به انگلیسی تنظیم شد!*",
@@ -153,12 +184,12 @@ MESSAGES = {
         'ask_start_date': (
             "🔹 **مرحله ۳: تاریخ شروع تحلیل**\n\n"
             "📅 *تاریخ شروع تحلیل را به فرمت* **YYYY-MM-DD** *وارد کنید.*\n"
-            "برای مثال: `01-01-2024`"
+            "برای مثال: `2024-01-01`"
         ),
         'ask_end_date': (
             "🔹 **مرحله ۴: تاریخ پایان تحلیل**\n\n"
             "📅 *تاریخ پایان تحلیل را به فرمت* **YYYY-MM-DD** *وارد کنید.*\n"
-            "برای مثال: `01-01-2025`"
+            "برای مثال: `2025-02-01`"
         ),
         'ask_monthly_limit': (
             "🔹 **مرحله ۵: حد سرمایه‌گذاری ماهانه**\n\n"
@@ -250,7 +281,6 @@ MESSAGES = {
         'inputs_confirmed': "ورودی‌ها تأیید شدند.",
     }
 }
-
 
 def get_message(language, key, **kwargs):
     """

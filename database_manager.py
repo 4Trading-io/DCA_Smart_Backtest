@@ -1,72 +1,107 @@
+# database_manager.py
 """
 database_manager.py
-Handles SQLite database connections for caching market data.
-We store:
-  - crypto_ohlc (symbol TEXT, date TEXT, open REAL, high REAL, low REAL, close REAL)
-  - usd_ohlc
-  - gold_ohlc
+Handles PostgreSQL database connections and schema creation.
 """
 
-import sqlite3
-import logging
 import os
-
-DB_FILE = "market_data.db"
-
+import logging
+import psycopg2
+from psycopg2.pool import SimpleConnectionPool
+from credentials import postgres_user, postgres_pass, postgress_table
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-os.makedirs('logs', exist_ok=True)
+# Environment variables for best practice in production
+POSTGRES_HOST =  "localhost"
+POSTGRES_PORT =  "5432"
+POSTGRES_DB   = postgress_table
+POSTGRES_USER = postgres_user
+POSTGRES_PASS = postgres_pass
+
+# Initialize a connection pool (tune minconn/maxconn as needed)
+MINCONN = 1
+MAXCONN = 10
+pool = SimpleConnectionPool(
+    MINCONN, MAXCONN,
+    host=POSTGRES_HOST,
+    port=POSTGRES_PORT,
+    database=POSTGRES_DB,
+    user=POSTGRES_USER,
+    password=POSTGRES_PASS
+)
+
+def get_connection():
+    """
+    Obtain a connection from the pool.
+    You MUST call `put_connection(conn)` when done to return it.
+    """
+    return pool.getconn()
+
+def put_connection(conn):
+    """
+    Return a connection to the pool.
+    """
+    pool.putconn(conn)
 
 def init_db():
-    """Initialize the database (create tables if not exist)."""
+    """
+    Create all needed tables if they don't exist yet.
+    """
     try:
-        conn = sqlite3.connect(DB_FILE)
-        c = conn.cursor()
+        conn = get_connection()
+        cur = conn.cursor()
 
-        # For general crypto pairs on Binance
-        c.execute('''
+        # Create the crypto_ohlc table
+        cur.execute('''
             CREATE TABLE IF NOT EXISTS crypto_ohlc (
-                symbol TEXT,
-                date TEXT,
-                open REAL,
-                high REAL,
-                low REAL,
-                close REAL,
+                symbol TEXT NOT NULL,
+                date TEXT NOT NULL,
+                open DOUBLE PRECISION,
+                high DOUBLE PRECISION,
+                low DOUBLE PRECISION,
+                close DOUBLE PRECISION,
                 PRIMARY KEY (symbol, date)
-            )
+            );
         ''')
 
         # For USD/IRR
-        c.execute('''
+        cur.execute('''
             CREATE TABLE IF NOT EXISTS usd_ohlc (
                 date TEXT PRIMARY KEY,
-                open REAL,
-                high REAL,
-                low REAL,
-                close REAL
-            )
+                open DOUBLE PRECISION,
+                high DOUBLE PRECISION,
+                low  DOUBLE PRECISION,
+                close DOUBLE PRECISION
+            );
         ''')
 
         # For Gold IRR or Gold USD
-        c.execute('''
+        cur.execute('''
             CREATE TABLE IF NOT EXISTS gold_ohlc (
                 date TEXT PRIMARY KEY,
-                open REAL,
-                high REAL,
-                low REAL,
-                close REAL
-            )
+                open DOUBLE PRECISION,
+                high DOUBLE PRECISION,
+                low  DOUBLE PRECISION,
+                close DOUBLE PRECISION
+            );
+        ''')
+
+        # For user sessions (moved from sessions.db to Postgres)
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS sessions (
+                chat_id TEXT PRIMARY KEY,
+                state TEXT,
+                inputs TEXT,
+                last_updated DOUBLE PRECISION
+            );
         ''')
 
         conn.commit()
-        conn.close()
-        logger.info("Database tables initialized or already exist.")
+        cur.close()
+        put_connection(conn)
+        logger.info("Database tables initialized (or already exist).")
+
     except Exception as e:
         logger.error(f"Error initializing DB: {e}", exc_info=True)
         raise
-
-def get_connection():
-    """Return a sqlite3 connection object."""
-    init_db()
-    return sqlite3.connect(DB_FILE)

@@ -1,3 +1,4 @@
+# data_preprocessing.py
 """
 data_preprocessing.py
 Fetches OHLC from DB for either:
@@ -10,6 +11,7 @@ import logging
 import pandas as pd
 from datetime import datetime
 from cache_manager import fetch_cached_data
+from database_manager import get_connection, put_connection, init_db
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -17,35 +19,29 @@ logger.setLevel(logging.DEBUG)
 def get_crypto_data(symbol_pair, start_date="2020-01-01", end_date="2030-01-01"):
     """
     Pull from crypto_ohlc for the given `symbol_pair`.
-    We only fetch rows where symbol=?
-    Returns a DataFrame [Date, Open, High, Low, Close, Return].
+    Return a DataFrame [Date, Open, High, Low, Close, Return].
     Possibly multiple rows per day (4h).
     """
-    # We'll do a custom version of fetch_cached_data that passes "symbol" in a filter.
-    # For simplicity, we can do a new function in cache_manager or just do direct code here.
-
-    from database_manager import get_connection
     conn = get_connection()
-    c = conn.cursor()
-    c.execute('''
+    cur = conn.cursor()
+    cur.execute('''
         SELECT date, open, high, low, close
         FROM crypto_ohlc
-        WHERE symbol=? 
-          AND date >= ?
-          AND date <= ?
+        WHERE symbol=%s 
+          AND date >= %s
+          AND date <= %s
         ORDER BY date ASC
     ''', (symbol_pair, start_date, end_date))
-    rows = c.fetchall()
-    conn.close()
+    rows = cur.fetchall()
+    cur.close()
+    put_connection(conn)
 
     df = pd.DataFrame(rows, columns=['date','Open','High','Low','Close'])
     if df.empty:
         logger.warning(f"No data returned for {symbol_pair} in range {start_date}..{end_date}.")
         return df
 
-    # parse date
     df['Date'] = pd.to_datetime(df['date'], format="%Y-%m-%d %H:%M:%S", errors='coerce')
-    # fallback if user stored daily only
     df['Date'] = df['Date'].fillna(pd.to_datetime(df['date'], format="%Y-%m-%d", errors='coerce'))
     df.drop(columns=['date'], inplace=True)
     df.sort_values(by='Date', inplace=True)
@@ -60,7 +56,6 @@ def get_gold_data(start_date="2020-01-01", end_date="2030-01-01"):
     Pull from gold_ohlc. 
     Returns a daily DF [Date, Open, High, Low, Close, Return].
     """
-    from cache_manager import fetch_cached_data
     rows = fetch_cached_data("gold_ohlc", start_date, end_date)
     df = pd.DataFrame(rows)
     if df.empty:

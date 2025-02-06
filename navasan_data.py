@@ -1,8 +1,4 @@
-"""
-navasan_data.py
-We add a forward-fill step for USD data so that every day has a valid price.
-"""
-
+# navasan_data.py
 import requests
 import jdatetime
 import logging
@@ -12,11 +8,11 @@ import pandas as pd
 from datetime import datetime
 from cache_manager import insert_ohlc_data, fetch_cached_data
 from database_manager import init_db
-
+from credentials import navasan_api_key
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-API_KEY = "freeYM34bO6B5FJWe7sZ6q8UDrktMjuy"
+API_KEY = navasan_api_key
 BASE_URL = "http://api.navasan.tech/ohlcSearch/"
 
 def persian_to_gregorian(persian_date_str):
@@ -64,13 +60,6 @@ def download_gold_data(start_shamsi, end_shamsi):
     insert_ohlc_data("gold_ohlc", data)
 
 def forward_fill_usd_data():
-    """
-    1. Load all USD data from the DB.
-    2. Convert to a DataFrame, parse dates, sort.
-    3. Reindex to a daily range with forward-fill so that *every day* has a valid close.
-    4. Re-insert into the DB with the newly filled rows.
-       (Optional, or we can keep the forward-filled DataFrame in memory for the next step.)
-    """
     logger.info("Starting forward-fill for USD data to handle missing days.")
     usd_all = fetch_cached_data("usd_ohlc", "0000-01-01", "9999-12-31")
     if not usd_all:
@@ -83,13 +72,10 @@ def forward_fill_usd_data():
     df.sort_values('Date', inplace=True)
     df.set_index('Date', inplace=True)
 
-    # We reindex daily from min to max
     all_days = pd.date_range(start=df.index.min(), end=df.index.max(), freq='D')
     df = df.reindex(all_days)
     df[['open','high','low','close']] = df[['open','high','low','close']].ffill()
 
-    # Now df has no missing days, each day is forward-filled.
-    # We can re-insert into DB if we want the DB to store all these new rows:
     fill_data = []
     for idx, row in df.iterrows():
         fill_data.append({
@@ -103,15 +89,7 @@ def forward_fill_usd_data():
     logger.info("USD forward-fill completed and reinserted into DB.")
 
 def convert_gold_to_usd():
-    """
-    Convert gold_ohlc from IRR to USD using matching or forward-filled USD close.
-    We'll do a simple approach:
-      1) forward_fill_usd_data() so the DB has a valid close for every day
-      2) fetch the gold_ohlc and usd_ohlc again
-      3) do the IRR->USD division day by day
-      4) re-insert updated gold data
-    """
-    forward_fill_usd_data()  # ensure USD is fully daily and filled
+    forward_fill_usd_data()
 
     gold_all = fetch_cached_data("gold_ohlc", "0000-01-01", "9999-12-31")
     if not gold_all:
@@ -141,6 +119,5 @@ def main_download_and_convert_gold(start_shamsi, end_shamsi):
     logger.info(f"=== Downloading USD & Gold from Navasan in range {start_shamsi}-{end_shamsi} ===")
     download_usd_data(start_shamsi, end_shamsi)
     download_gold_data(start_shamsi, end_shamsi)
-    # Now convert IRR -> USD with forward fill
     convert_gold_to_usd()
     logger.info("Finished Gold & USD updates (with forward fill).")

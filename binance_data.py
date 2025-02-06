@@ -1,12 +1,4 @@
-"""
-binance_data.py
-Download data at 4-hour intervals from Binance for any symbol (e.g. BTCUSDT, ETHUSDT).
-Stores in 'crypto_ohlc' with symbol + date as primary key.
-
-FIX: We pass symbol=symbol_pair to get_missing_date_ranges to ensure
-     symbol-based coverage check is used.
-"""
-
+# binance_data.py
 import requests
 import logging
 import time
@@ -55,10 +47,6 @@ def download_binance_klines(symbol_pair, interval, start_ts, end_ts):
     return all_klines
 
 def binance_klines_to_ohlc(klines, symbol_pair):
-    """
-    Convert raw klines to a list of { symbol, date, open, high, low, close }
-    each row is a 4h candle.
-    """
     from datetime import datetime
     results = []
     for k in klines:
@@ -81,21 +69,15 @@ def binance_klines_to_ohlc(klines, symbol_pair):
     return results
 
 def download_binance_data(symbol_pair, start_date, end_date):
-    """
-    Ensure 'symbol_pair' data is cached from [start_date, end_date].
-    We'll do a symbol-based coverage check so that if there's no data for BTCUSDT,
-    it triggers a full download even if some other symbol is present.
-    """
     logger.info(f"=== Downloading {symbol_pair} data for {start_date} to {end_date} ===")
-    init_db()
+    init_db()  # ensure tables exist
 
     try:
-        # Pass the symbol param so it's symbol-based coverage
         missing_ranges = get_missing_date_ranges("crypto_ohlc", start_date, end_date, symbol=symbol_pair)
     except ValueError as e:
         logger.error(f"Error checking missing range for {symbol_pair}: {e}", exc_info=True)
-        # We can fallback to a full range if desired
-        logger.info(f"Symbol param error => forcing a full download for {symbol_pair}.")
+        # fallback
+        logger.info(f"Forcing a full download for {symbol_pair}.")
         missing_ranges = [(start_date, end_date)]
 
     if not missing_ranges:
@@ -108,7 +90,7 @@ def download_binance_data(symbol_pair, start_date, end_date):
         end_ts   = date_to_millis(m_end)
         klines   = download_binance_klines(symbol_pair, INTERVAL, start_ts, end_ts)
         if klines:
-            ohlc     = binance_klines_to_ohlc(klines, symbol_pair)
+            ohlc = binance_klines_to_ohlc(klines, symbol_pair)
             insert_ohlc_data("crypto_ohlc", ohlc)
         else:
             logger.warning(f"No klines fetched from Binance for {symbol_pair} in range {m_start}..{m_end}")

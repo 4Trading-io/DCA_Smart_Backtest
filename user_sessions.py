@@ -1,41 +1,25 @@
-"""
-user_sessions.py
-Manages user conversation states in sessions.db
-"""
+# user_sessions.py
 
-import sqlite3
 import json
 import time
-import os
 import logging
-
-DB_FILE = "sessions.db"
+from database_manager import get_connection, put_connection, init_db
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-def init_db():
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS sessions (
-            chat_id TEXT PRIMARY KEY,
-            state TEXT,
-            inputs TEXT,
-            last_updated REAL
-        )
-    ''')
-    conn.commit()
-    conn.close()
-    logger.debug("Initialized sessions table for user sessions.")
+def init_sessions_table():
+    # Ensure the sessions table exists (already done in init_db, but you can call again if needed)
+    init_db()
 
 def get_session(chat_id):
-    init_db()
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute("SELECT state, inputs FROM sessions WHERE chat_id=?", (str(chat_id),))
-    row = c.fetchone()
-    conn.close()
+    init_sessions_table()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT state, inputs FROM sessions WHERE chat_id=%s", (str(chat_id),))
+    row = cur.fetchone()
+    cur.close()
+    put_connection(conn)
     if row:
         state, inputs_json = row
         inputs = json.loads(inputs_json) if inputs_json else {}
@@ -44,22 +28,32 @@ def get_session(chat_id):
         return None
 
 def update_session(chat_id, state, inputs):
-    init_db()
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
+    init_sessions_table()
+    conn = get_connection()
+    cur = conn.cursor()
     inputs_json = json.dumps(inputs)
     timestamp = time.time()
-    c.execute("REPLACE INTO sessions (chat_id, state, inputs, last_updated) VALUES (?, ?, ?, ?)",
-              (str(chat_id), state, inputs_json, timestamp))
+    # Use ON CONFLICT to update or insert
+    cur.execute("""
+        INSERT INTO sessions (chat_id, state, inputs, last_updated)
+        VALUES (%s, %s, %s, %s)
+        ON CONFLICT (chat_id)
+        DO UPDATE SET
+            state = EXCLUDED.state,
+            inputs = EXCLUDED.inputs,
+            last_updated = EXCLUDED.last_updated
+    """, (str(chat_id), state, inputs_json, timestamp))
     conn.commit()
-    conn.close()
+    cur.close()
+    put_connection(conn)
     logger.debug(f"Updated session for chat_id={chat_id}, state={state}.")
 
 def delete_session(chat_id):
-    init_db()
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute("DELETE FROM sessions WHERE chat_id=?", (str(chat_id),))
+    init_sessions_table()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM sessions WHERE chat_id=%s", (str(chat_id),))
     conn.commit()
-    conn.close()
+    cur.close()
+    put_connection(conn)
     logger.debug(f"Deleted session for chat_id={chat_id}.")

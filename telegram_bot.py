@@ -48,7 +48,7 @@ def get_language(chat_id):
         lang = session['inputs']['language']
         if lang:
             return lang
-    return 'en'
+    return 'fa'
 
 def bot_message(chat_id, key, **kwargs):
     """Retrieve a message for the given chat and key using the correct language."""
@@ -70,7 +70,7 @@ def rate_limited(func):
 def handle_start(message):
     chat_id = message.chat.id
     # Reset the session state for a new conversation
-    user_sessions.update_session(chat_id, "choose_language", {"language": "en"})  # default to en
+    user_sessions.update_session(chat_id, "choose_language", {"language": "fa"})  # default to en
     welcome_text = bot_message(chat_id, 'welcome_intro')
     bot.send_message(chat_id, welcome_text, parse_mode="Markdown")
     bot.send_message(

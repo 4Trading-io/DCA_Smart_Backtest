@@ -48,7 +48,7 @@ def get_language(chat_id):
         lang = session['inputs']['language']
         if lang:
             return lang
-    return 'fa'
+    return 'en'
 
 def bot_message(chat_id, key, **kwargs):
     """Retrieve a message for the given chat and key using the correct language."""

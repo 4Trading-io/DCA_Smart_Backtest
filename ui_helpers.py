@@ -12,7 +12,7 @@ def get_language_keyboard():
 def get_predefined_crypto_keyboard():
     """Return a reply keyboard with common crypto pair options."""
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    markup.row("BTCUSDT", "ETHUSDT", "SOLUSDT")
+    markup.row("BTCUSDT", "ETHUSDT", "SOLUSDT", "SUIUSDT", "XRPUSDT")
     return markup
 
 def get_confirmation_inline_keyboard(language="en"):
